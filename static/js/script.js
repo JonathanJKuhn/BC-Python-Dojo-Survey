@@ -1,12 +1,41 @@
 var  otherCheck = document.getElementById("other");
+var otherText = document.getElementById("other-text");
 
-function toggleOtherText() {
+var reasonGroup = document.getElementsByName("reasonInput");
+
+function validateOtherText() {
     if (otherCheck.checked) {
-        document.getElementById("other-text").disabled = false;
+        otherText.disabled = false;
+        otherText.required = true;
     }
     else {
-        document.getElementById("other-text").disabled = true;
-    }
+        otherText.disabled = true;
+        otherText.required = false;
+    };
 };
 
-otherCheck.addEventListener('click', toggleOtherText);
+function toggleGroupRequired(group, bool) {
+    group.forEach((x) => {
+        x.required = bool;
+    });
+};
+
+function validateReasonRequired () {
+    var anyChecked = false;
+    reasonGroup.forEach((reason) => {
+        if (reason.checked) {
+            anyChecked = true;
+            toggleGroupRequired(reasonGroup, false);
+        };       
+    });
+
+    if (!anyChecked) {
+        toggleGroupRequired(reasonGroup, true);
+    };
+};
+
+otherCheck.addEventListener('click', validateOtherText);
+
+reasonGroup.forEach( x => {
+    x.addEventListener('click', validateReasonRequired);
+});
