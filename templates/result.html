@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <title>Result - Dojo Survey</title>
+</head>
+<body>
+    <div class="container-sm">
+        <h1>Thanks {Name}!</h1>
+        <p class="lead">Just a quick glance at what you shared with us</p>
+        <div class="d-flex justify-content-between">
+            <p>Dojo Location:</p>
+            <p>{location}</p>
+        </div>
+        <div class="d-flex justify-content-between">
+            <p>Language:</p>
+            <p>{Language}</p>
+        </div>
+        <div class="d-flex justify-content-between">
+            <p>Satisfaction:</p>
+            <p>{Satisfaction}</p>
+        </div>
+        <div class="d-flex justify-content-between">
+            <p>Reason:</p>
+            <p>{Reason}</p>
+        </div>
+        <div class="">
+            <p>Comment:</p>
+            <p>{Comment}</p>
+        </div>
+        <div class="d-flex justify-content-between">
+            <span><a href="#" class="btn btn-primary">Go Back</a></span>
+            <span><a href="#" class="btn btn-success">Take Again</a></span>
+        </div>
+    </div>
+</body>
+</html>
