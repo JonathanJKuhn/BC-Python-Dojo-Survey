@@ -11,6 +11,7 @@ function validateOtherText() {
     else {
         otherText.disabled = true;
         otherText.required = false;
+        otherText.value = '';
     };
 };
 

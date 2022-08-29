@@ -10,31 +10,39 @@
 </head>
 <body>
     <div class="container-sm">
-        <h1>Thanks {Name}!</h1>
+        <h1>Thanks {{session['name']}}!</h1>
         <p class="lead">Just a quick glance at what you shared with us</p>
         <div class="d-flex justify-content-between">
             <p>Dojo Location:</p>
-            <p>{location}</p>
+            <p>{{session['location'].capitalize()}}</p>
         </div>
         <div class="d-flex justify-content-between">
             <p>Language:</p>
-            <p>{Language}</p>
+            <p>{{session['language'].capitalize()}}</p>
         </div>
         <div class="d-flex justify-content-between">
             <p>Satisfaction:</p>
-            <p>{Satisfaction}</p>
+            <p>{{session['satisfaction']}}</p>
         </div>
         <div class="d-flex justify-content-between">
             <p>Reason:</p>
-            <p>{Reason}</p>
-        </div>
-        <div class="">
-            <p>Comment:</p>
-            <p>{Comment}</p>
+            <p>
+                {% for i in session['reason'] %}
+                    {% if i == 'other' %}
+                        {{session['otherReason'].capitalize()}}
+                    {% else %}
+                        {{i.capitalize()}} |
+                    {% endif %}
+                {% endfor %}
+            </p>
         </div>
         <div class="d-flex justify-content-between">
-            <span><a href="#" class="btn btn-primary">Go Back</a></span>
-            <span><a href="#" class="btn btn-success">Take Again</a></span>
+            <p>Comment:</p>
+            <p>{{session['comment']}}</p>
+        </div>
+        <div class="d-flex justify-content-between mt-2">
+            <span><a href="/" class="btn btn-primary">Go Back</a></span>
+            <span><a href="/destroy" class="btn btn-success">Take Again</a></span>
         </div>
     </div>
 </body>

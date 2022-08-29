@@ -11,75 +11,110 @@
 <body>
     <div class="container-sm">
         <h1>Dojo Survey</h1>
-        <form action="#">
+        <form action="/process" method="post">
             <div class="mb-3">
                 <label for="nameInput" class="form-label">Name:*</label>
-                <input type="text" class="form-control" name="nameInput" id="nameInput" required>
+                <input type="text" class="form-control" name="nameInput" id="nameInput" value='{{session['name']}}'  required>
             </div>
             <div class="mb-3">
                 <label for="locationInput" class="form-label">Dojo Location:*</label>
                 <select class="form-select" name="locationInput" id="locationInput" required>
-                    <option selected value="">-- Select A Location --</option>
-                    <option value="chicago">Chicago</option>
-                    <option value="seattle">Seattle</option>
-                    <option value="online">Online</option>
-                    <option value="burbank">Burbank</option>
-                    <option value="bellvue">Bellvue</option>
+                    <option
+                        {% if session['location'] is undefined %}
+                            selected
+                        {% endif %}
+                        value="">-- Select A Location --</option>
+                    {% for i in locations %}
+                        <option
+                            {% if i == session['location'] %}
+                                selected
+                            {% endif %}
+                            value="{{i}}">{{i.capitalize()}}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="mb-3">
                 <label for="languageInput" class="form-label">Favorite Language:*</label>
                 <select class="form-select" name="languageInput" id="languageInput" required>
-                    <option selected value="">-- Select A Language --</option>
-                    <option value="html">HTML</option>
-                    <option value="css">CSS</option>
-                    <option value="javascript">JavaScript</option>
-                    <option value="csharp">C#</option>
-                    <option value="java">Java</option>
+                    <option
+                        {% if session['language'] is undefined %}
+                            selected
+                        {% endif %}
+                        value="">-- Select A Language --</option>
+                    {% for i in languages %}
+                        <option
+                            {% if i == session['language'] %}
+                                selected
+                            {% endif %}
+                            value="{{i}}">{{i.capitalize()}}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="mb-3">
                 <label for="satisfactionInput" class="d-block form-label">Satisfaction: (1-Worst/5-Best)*</label>
-                <div class="form-check form-check-inline form-check-reverse">
-                    <label for="satisfaction-1" class="form-check-label">1 </label>
-                    <input type="radio" class="form-check-input" name="satisfactionInput" id="satisfaction-1" required>
-                </div>
-                <div class="form-check-inline">
-                    <input type="radio" class="form-check-input" name="satisfactionInput" id="satisfaction-2">
-                </div>
-                <div class="form-check-inline">
-                    <input type="radio" class="form-check-input" name="satisfactionInput" id="satisfaction-3">
-                </div>
-                <div class="form-check-inline">
-                    <input type="radio" class="form-check-input" name="satisfactionInput" id="satisfaction-4">
-                </div>
-                <div class="form-check form-check-inline">
-                    <input type="radio" class="form-check-input" name="satisfactionInput" id="satisfaction-5">
-                    <label for="satisfaction-5" class="form-check-label"> 5</label>
-                </div>
+                {% for i in satScale %}
+                    {% if loop.index == 0 %}
+                        <div class="form-check form-check-inline form-check-reverse">
+                            <label for="satisfaction-{{i}}" class="form-check-label">{{i}} </label>
+                            <input type="radio" class="form-check-input" name="satisfactionInput" id="satisfaction-1" value="{{i}}" 
+                            {% if i == session['satisfaction']|int %}
+                                checked
+                            {% endif %}
+                            required>
+                        </div>
+                    {% elif loop.index == (satScale|length) %}
+                        <div class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input" name="satisfactionInput" id="satisfaction-{{i}}" value="{{i}}"
+                            {% if i == session['satisfaction']|int %}
+                                checked
+                            {% endif %}
+                            >
+                            <label for="satisfaction-{{i}}" class="form-check-label"> {{i}}</label>
+                        </div>
+                    {% else %}   
+                        <div class="form-check-inline">
+                            <input type="radio" class="form-check-input" name="satisfactionInput" id="satisfaction-{{i}}" value="{{i}}"
+                            {% if i == session['satisfaction']|int %}
+                                checked
+                            {% endif %}
+                            >
+                        </div>
+                    {% endif %}
+                {% endfor %}
             </div>
             <div class="mb-3">
                 <label for="reasonInput" class="d-block form-label">Reason(s) for Joining:*</label>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" name="reasonInput" id="change" required>
-                    <label for="change" class="form-check-label">Career Change</label>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" name="reasonInput" id="advancement">
-                    <label for="advancement" class="form-check-label">Career Advancement</label>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" name="reasonInput" id="personal">
-                    <label for="personal" class="form-check-label">Personal Interest</label>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" name="reasonInput" id="other">
-                    <input type="text" class="form-control" name="reasonInput" id="other-text" placeholder="Other" disabled>
-                </div>
+                {% for i in reasons %}
+                    {% if i['value'] == 'other' %}
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="reasonInput" id="other" value="other"
+                            {% if i['value'] in session['reason'] %}
+                                checked
+                                required
+                            {% endif %}
+                            >
+                            <input type="text" class="form-control" name="otherReasonInput" id="other-text" placeholder="Other" value="{{session['otherReason']}}" 
+                            {% if i['value'] not in session['reason'] %}
+                                disabled
+                            {% endif %}
+                            >
+                        </div>
+                    {% else %}
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="reasonInput" id="{{i['value']}}" value="{{i['value']}}" 
+                            {% if i['value'] in session['reason'] %}
+                                checked
+                                required
+                            {% endif %}
+                            >
+                            <label for="change" class="form-check-label">{{i['title']}}</label>
+                        </div>
+                    {% endif %}
+                {% endfor %}
             </div>
             <div class="mb-3">
                 <label for="commentInput" class="form-label">Comments:</label>
-                <textarea class="form-control" name="commentInput" id="commentInput" rows="8"></textarea>
+                <textarea class="form-control" name="commentInput" id="commentInput" rows="8">{{session['comment']}}</textarea>
             </div>
             <p class="form-text">* required</p>
             <button type="submit" class="btn btn-primary">Submit</button>
